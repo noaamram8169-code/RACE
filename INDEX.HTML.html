@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>המירוץ למבחן</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Secular+One&display=swap">
+<style>
+:root{--bg:#eef3f8;--surf:#fff;--ink:#12263f;--mute:#5b6b80;--line:#c9d5e3;--brand:#1b3a6b;--onbrand:#fff;--sun:#ffb800;--ok:#17a673;--okbg:#dcf5ec;--no:#d6334b;--nobg:#fde4e8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a2b;--surf:#172840;--ink:#eaf0f8;--mute:#9db0c8;--line:#2d4263;--brand:#ffb800;--onbrand:#12263f;--okbg:#0f3a2e;--nobg:#4a1e29;--ok:#3fd49b;--no:#ff7a8d}}
+:root[data-theme="dark"]{--bg:#0e1a2b;--surf:#172840;--ink:#eaf0f8;--mute:#9db0c8;--line:#2d4263;--brand:#ffb800;--onbrand:#12263f;--okbg:#0f3a2e;--nobg:#4a1e29;--ok:#3fd49b;--no:#ff7a8d}
+html{scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:light dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.55 Heebo,Arial,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:16px}
+h1,h2,.stamp{font-family:"Secular One",Heebo,Arial,sans-serif;font-weight:400;margin:0}
+h1{font-size:44px;line-height:1.1}h2{font-size:26px}
+p{margin:.5em 0}.mute{color:var(--mute);font-size:16px}
+.card{background:var(--surf);border:2px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+.btn{display:block;width:100%;min-height:54px;border:0;border-radius:12px;background:var(--brand);color:var(--onbrand);font:700 19px Heebo,Arial,sans-serif;cursor:pointer;margin-top:12px}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn:focus-visible,.opt:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+input,select{width:100%;min-height:52px;border:2px solid var(--line);border-radius:12px;background:var(--surf);color:var(--ink);font:500 19px Heebo,Arial,sans-serif;padding:0 14px;margin-top:10px}
+.top{display:flex;align-items:center;gap:8px}
+.dots{display:flex;gap:6px;flex:1}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font:700 13px Heebo,sans-serif;color:var(--mute)}
+.dot.on{border-color:var(--brand);color:var(--ink)}
+.dot.done{background:var(--brand);border-color:var(--brand);color:var(--onbrand)}
+.pill{border-radius:8px 20px 8px 20px;background:var(--sun);color:#12263f;font-weight:700;padding:2px 12px;font-size:16px;white-space:nowrap}
+.timer{font:700 17px Heebo,sans-serif;color:var(--mute)}.timer.low{color:var(--no)}
+.tag{display:inline-block;border:2px solid var(--sun);border-radius:8px;padding:0 10px;font-weight:700;font-size:15px;margin-inline-start:8px}
+.q{font-size:21px;font-weight:500;margin:0 0 6px}
+.text{border-inline-start:5px solid var(--sun);padding:4px 12px;margin:10px 0;font-size:17px}
+.opt{display:block;width:100%;min-height:54px;text-align:right;border:2px solid var(--line);border-radius:12px;background:var(--surf);color:var(--ink);font:500 18px Heebo,Arial,sans-serif;padding:10px 14px;margin-top:10px;cursor:pointer}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}.opt.no{border-color:var(--no);background:var(--nobg)}
+.why{margin-top:12px;font-size:16px}
+.stamp{width:150px;height:150px;border:5px solid var(--ok);color:var(--ok);border-radius:50%;display:grid;place-items:center;text-align:center;font-size:26px;line-height:1.15;margin:8px auto;transform:rotate(-12deg);animation:thump .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes thump{from{transform:rotate(-30deg) scale(2.4);opacity:0}to{transform:rotate(-12deg) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.stamp{animation:none}}
+.row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.big{font:400 54px/1.1 "Secular One",Heebo,sans-serif;text-align:center}
+.clue{border:3px dashed var(--sun);border-radius:14px;padding:12px;margin:12px 0;text-align:right}
+.code{border:3px dashed var(--brand);border-radius:14px;padding:12px;text-align:center;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const T=300;
+const TM=location.hash==='#teacher';
+/* למורה: קוד לכל תחנה (נכתב על השלט בתחנה) והוראת מציאה אישית. אם משאירים CLUES ריק, מופיעה הוראה כללית. */
+const CODES=['6602','2468','1357','9024','5813','7731'];
+const CLUES=[
+'כאן קונים את ההפסקה: כריכים, שתייה וחטיפים. הקוד מחכה לכם במקום שבו כולם עומדים בתור.',
+'כאן מתקיימים הטקסים וההצגות, וכל הכיסאות מביטים אל הבמה. הקוד מחכה לכם מול הבמה.',
+'הוא מרכז את כל עניני השכבה: מי איחר, מי חסר ומי צריך אישור מיוחד. הקוד נמצא אצלו.',
+'היא מספר שתיים בבית הספר, וממלאת את מקומו של מי שעומד בראש המוסד כשהוא לא נמצא. הקוד אצלה.',
+'הוא הראשון שרואה אתכם בבוקר והאחרון בצהריים, ואף אחד לא נכנס ולא יוצא בלי שהוא יודע. הקוד אצלו.',
+'כאן מדברים בלחש, ומאות ספרים מחכים לכם על המדפים. הקוד מחכה לכם בין הספרים.'];
+const FCODE='3141';
+const FCLUE='כאן עונים לטלפון הראשי, מנפיקים אישורים ומטביעים חותמות. רצו לשם: הקוד האחרון מחכה, והקבוצה שתגיע ראשונה מנצחת!';
+const clue=i=>CLUES[i]||('חפשו בכיתה את השלט ״תחנה '+(i+1)+'״. הקוד כתוב עליו.');
+const ST=[
+{n:'מילות הוראה',intro:'מה מבקשים ממך כשכתוב…',pts:1,qs:[
+{q:'מה עליך לעשות כשכתוב ״נמק״?',o:['לתת סיבה לקביעה','לסכם את הטקסט','לצטט מהטקסט','לרשום פרטים בלי הסבר'],w:'נמק = לתת סיבה או טעם.'},
+{q:'מה עליך לעשות כשכתוב ״הוכח״?',o:['להביא ראיות מתוך הטקסט','להביע דעה אישית','לספר חוויה אישית','לסכם בקצרה'],w:'הוכח = להסתמך על ראיות מן הטקסט.'},
+{q:'מה עליך לעשות כשכתוב ״השווה״?',o:['להציג דמיון והבדל','להציג רק הבדלים','להסביר סיבה','להביע דעה'],w:'השווה = גם דמיון וגם הבדל.'},
+{q:'מה עליך לעשות כשכתוב ״ציין״?',o:['לכתוב תשובה קצרה בלי להרחיב','לכתוב פסקה מנומקת','להשוות בין שני דברים','להוכיח בעזרת ציטוט'],w:'ציין = תשובה קצרה וישירה.'},{q:'במבחן כתוב: ״סכם את הפסקה״. איזו תשובה מתאימה?',o:['משפט או שניים עם הרעיון המרכזי, במילים שלי','העתקת הפסקה כולה','דעתי האישית על הנושא','רשימת כל הפרטים בפסקה'],w:'סיכום = עיקרי הדברים, בקיצור ובמילים שלך.'},{h:1,q:'מה ההבדל בין ״הסבר״ ל״נמק״?',o:['הסבר מבהיר איך או למה משהו קורה, נימוק נותן סיבה לטענה','אין הבדל','נימוק תמיד קצר מהסבר','הסבר הוא דעה אישית'],w:'נימוק קשור לטענה, והסבר מבהיר תהליך או סיבה.'},{h:1,q:'כתוב: ״הסבר מדוע הכותב פותח בשאלה״. מה חסר בתשובה ״כדי לעניין״?',o:['הסבר מדוע זה מעניין את הקורא ומה זה תורם לטקסט','כלום, התשובה מלאה','ציטוט הפסקה הראשונה','דעה אישית על הכותב'],w:'מילת ההוראה ״הסבר״ מבקשת הרחבה ולא מילה אחת.'},{h:1,q:'במה שונה ״הוכח״ מ״ציין״?',o:['הוכח דורש ראיה מהטקסט, ציין דורש פרט קצר','אין הבדל','ציין דורש דעה, הוכח דורש סיכום','הוכח קצר יותר'],w:'הוכח = ראיה, ציין = פרט קצר.'}]},
+{n:'קשרים לוגיים',intro:'בחרו את הקשר המתאים למשפט.',pts:1,qs:[
+{q:'המשחקים הממוחשבים מבדרים, ___ הם עלולים לפגוע בריכוז.',o:['אולם','לכן','כדי','אם'],w:'אולם = קשר של ניגוד.'},
+{q:'הוא ישן מעט, ___ התקשה להתרכז בשיעור.',o:['לכן','אולם','אילו','כדי'],w:'לכן = קשר של תוצאה.'},
+{q:'יש ללמוד בקביעות ___ להצליח במבחן.',o:['כדי','אך','לכן','אלמלא'],w:'כדי = קשר של מטרה.'},
+{q:'___ נקרא בעיון, נבין את כוונת הכותב.',o:['אם','אך','לכן','משום ש'],w:'אם = קשר של תנאי.'},{q:'האתר פופולרי, ___ הוא אינו מדויק תמיד.',o:['עם זאת','לכן','כדי','אילולא'],w:'עם זאת = ניגוד.'},{h:1,q:'איזה משפט מכיל קשר של תוצאה?',o:['הוא למד הרבה, ולכן הצליח.','הוא למד הרבה, אך נכשל.','הוא למד כדי להצליח.','אם ילמד, יצליח.'],w:'״ולכן״ מציג תוצאה. אך = ניגוד, כדי = מטרה, אם = תנאי.'},{h:1,q:'___ הכותב חשש מהביקורת, הוא פרסם את הטקסט. איזה קשר מתאים?',o:['אף על פי ש','משום ש','לפיכך','כדי ש'],w:'ויתור: למרות החשש, הוא פרסם.'},{h:1,q:'באיזה משפט מופיע קשר סיבה (ולא תוצאה)?',o:['הוא נעדר מפני שחלה.','הוא חלה, ולכן נעדר.','הוא חלה, לפיכך נעדר.','הוא חלה ועל כן נעדר.'],w:'״מפני ש״ מציג סיבה. ״לכן״, ״לפיכך״ ו״על כן״ מציגים תוצאה.'}]},
+{n:'מאזכרים',tag:'מחסום',intro:'מחסום: כל אחד פותר לבד, בלי עזרה מהחברים. בכל שאלה בוחרים גם למי המאזכר מתייחס וגם מהו סוגו. כל שאלה שווה 2 נקודות, ושאלות האתגר 4.',pts:2,text:'דנה הגיעה לחוג התיאטרון בפעם הראשונה. היא פחדה לעלות לבמה, אך המדריך עודד אותה. הוא אמר שכל שחקן מתחיל כך, ודבריו הרגיעו אותה. בסוף החוג העלו התלמידים סצנה קצרה, ובה שיחקה דנה תפקיד קטן.',qs:[
+{q:'המאזכר ״היא״: למי הוא מתייחס ומה סוגו?',o:['לדנה – מאזכר גוף','לדנה – מאזכר מושא','למדריך – מאזכר גוף','לסצנה – מאזכר יחס'],w:'״היא״ חוזרת אל דנה והיא כינוי גוף.'},
+{q:'המאזכר ״אותה״ (המדריך עודד אותה): למי הוא מתייחס ומה סוגו?',o:['לדנה – מאזכר מושא','לדנה – מאזכר גוף','למדריך – מאזכר מושא','לבמה – מאזכר שייכות'],w:'״אותה״ הוא מושא הפעולה, ולכן הוא מאזכר מושא.'},
+{q:'המאזכר ״הוא״: למי הוא מתייחס ומה סוגו?',o:['למדריך – מאזכר גוף','למדריך – מאזכר מושא','לדנה – מאזכר גוף','לחוג – מאזכר רמז'],w:'״הוא״ חוזר אל המדריך והוא כינוי גוף.'},
+{q:'המאזכר ״דבריו״: למי הוא מתייחס ומה סוגו?',o:['למדריך – מאזכר שייכות','למדריך – מאזכר גוף','לדנה – מאזכר שייכות','לשחקן – מאזכר מושא'],w:'הסיומת מציינת שייכות: הדברים של המדריך.'},
+{h:1,q:'המאזכר ״ובה״: למי הוא מתייחס ומה סוגו?',o:['לסצנה – מאזכר יחס','לסצנה – מאזכר גוף','לחוג – מאזכר יחס','לדנה – מאזכר יחס'],w:'״בה״ = ב + ה: מילת יחס עם כינוי, והיא חוזרת אל הסצנה.'},
+{t:'הקריאה בספרים מרחיבה את אוצר המילים. היא גם מפתחת דמיון, ולכן מורים רבים ממליצים עליה. עם זאת, בני נוער רבים מעדיפים מסכים, משום שהם קלים יותר לצריכה. לכך יש מחיר: ריכוז נמוך יותר.',q:'המאזכר ״עליה״: למי הוא מתייחס ומה סוגו?',o:['לקריאה – מאזכר יחס','לקריאה – מאזכר מושא','למורים – מאזכר יחס','למסכים – מאזכר יחס'],w:'״עליה״ = על + ה: מילת יחס עם כינוי, וחוזרת אל הקריאה.'},
+{h:1,t:'הקריאה בספרים מרחיבה את אוצר המילים. היא גם מפתחת דמיון, ולכן מורים רבים ממליצים עליה. עם זאת, בני נוער רבים מעדיפים מסכים, משום שהם קלים יותר לצריכה. לכך יש מחיר: ריכוז נמוך יותר.',q:'המאזכר ״שהם״: למי הוא מתייחס ומה סוגו?',o:['למסכים – מאזכר גוף','לבני נוער – מאזכר גוף','למסכים – מאזכר שייכות','למסכים – מאזכר רמז'],w:'המסכים קלים לצריכה, והמאזכר הוא כינוי גוף.'},
+{h:1,t:'הקריאה בספרים מרחיבה את אוצר המילים. היא גם מפתחת דמיון, ולכן מורים רבים ממליצים עליה. עם זאת, בני נוער רבים מעדיפים מסכים, משום שהם קלים יותר לצריכה. לכך יש מחיר: ריכוז נמוך יותר.',q:'המאזכר ״לכך״: למה הוא מתייחס ומה סוגו?',o:['להעדפת המסכים על פני ספרים – מאזכר רמז','לריכוז – מאזכר רמז','להעדפת המסכים – מאזכר גוף','לבני נוער – מאזכר רמז'],w:'״לכך״ הוא כינוי רמז שמפנה לרעיון שלם.'}]},
+{n:'יחסים בין מילים',intro:'מהו היחס בין שתי המילים: נרדפות, ניגוד או היכללות?',pts:1,qs:[
+{q:'לשבח – להלל',o:['נרדפות','ניגוד','היכללות'],w:'שתי מילים קרובות במשמעותן.'},
+{q:'קמצנות – נדיבות',o:['ניגוד','נרדפות','היכללות'],w:'משמעויות הפוכות.'},
+{q:'כלי נגינה – חליל',o:['היכללות','נרדפות','ניגוד'],w:'חליל הוא סוג של כלי נגינה.'},
+{q:'מקצוע – נגר',o:['היכללות','נרדפות','ניגוד'],w:'נגר הוא סוג של מקצוע.'},
+{h:1,q:'שאננות – אדישות',o:['נרדפות','ניגוד','היכללות'],w:'שתיהן מתארות חוסר דאגה והתעניינות.'},
+{h:1,q:'ספקנות – אמונה',o:['ניגוד','נרדפות','היכללות'],w:'ספקנות היא היעדר אמונה.'},
+{h:1,q:'להאדיר – לגנות',o:['ניגוד','נרדפות','היכללות'],w:'לשבח ולהעצים לעומת לבקר.'},
+{h:1,q:'יונק – לוויתן',o:['היכללות','נרדפות','ניגוד'],w:'לוויתן הוא סוג של יונק.'}]},
+{n:'סוגי טקסטים',intro:'בכל שאלה בוחרים גם את סוג הטקסט וגם את המאפיין שלפיו זיהיתם אותו: טיעוני, מידעי או שימושי.',pts:1,qs:[
+{q:'יש לאסור שימוש בטלפונים ניידים בשיעורים, שכן הם מפריעים לריכוז ופוגעים בלמידה.',o:['טיעוני – עמדה ונימוק','טיעוני – עובדות ונתונים בלבד','מידעי – עמדה ונימוק','שימושי – שלבי פעולה'],w:'״יש לאסור״ היא עמדה, ו״שכן״ מציג נימוק.'},
+{q:'הדולפין הוא יונק ימי. הוא חי בלהקות ומתקשר באמצעות קולות.',o:['מידעי – עובדות בלי עמדה','מידעי – פנייה אל הקורא','טיעוני – עובדות בלי עמדה','שימושי – לשון ציווי'],w:'עובדות בלשון ניטרלית, בלי עמדה אישית.'},
+{q:'לפני תחילת הניסוי יש להרכיב משקפי מגן ולוודא שהשולחן יבש.',o:['שימושי – לשון הוראה וסדר פעולות','שימושי – עמדה ונימוק','מידעי – לשון הוראה','טיעוני – לשון הוראה'],w:'מטרת הטקסט היא להנחות לביצוע פעולה.'},
+{q:'לפי הסקר, 70 אחוזים מהתלמידים ישנים פחות משמונה שעות בלילה.',o:['מידעי – נתונים ומספרים','טיעוני – נתונים ומספרים','שימושי – נתונים ומספרים','מידעי – עמדה אישית'],w:'נתונים ומספרים הם מאפיין של טקסט מידעי.'},
+{q:'איזה מאפיין מעיד על טקסט טיעוני?',o:['עמדה שהכותב מנמק ומדגים','נתונים בלי עמדה','פעלים בציווי ושלבים','מונחים מקצועיים בלבד'],w:'טענה, נימוק ודוגמה הם לב הטקסט הטיעוני.'},
+{q:'איזה מאפיין מעיד על טקסט שימושי?',o:['פנייה ישירה וסדר פעולות לביצוע','עמדה ונימוק','עובדות על נושא בלי הוראות','נימוק ודוגמה'],w:'הטקסט השימושי מנחה את הקורא מה לעשות.'},
+{h:1,q:'איזה מאפיין מעיד על טקסט מידעי?',o:['עובדות ונתונים בלשון ניטרלית, בלי עמדה אישית','פנייה לקורא בלשון ציווי','נימוק ודוגמה לטענה','פעלים בלשון הוראה'],w:'מידע אובייקטיבי בלי עמדה.'},
+{h:1,q:'הדולפינים חיים בלהקות. חשוב לשמור עליהם, שכן הם נפגעים מזיהום הים.',o:['טיעוני – עמדה (״חשוב לשמור״) ונימוק (״שכן״)','מידעי – עובדות על הדולפינים','שימושי – לשון הוראה','מידעי – אין בו מילות קישור'],w:'יש כאן עמדה ונימוק, גם אם מופיעה עובדה.'},
+{h:1,q:'מה ההבדל המרכזי בין טקסט טיעוני לטקסט מידעי?',o:['טיעוני מביע עמדה ומנמק, מידעי מוסר עובדות בלי עמדה','מידעי ארוך מטיעוני','טיעוני כתוב רק בזמן עבר','אין הבדל'],w:'ההבדל הוא בעמדה ובנימוק.'},
+{h:1,q:'איזה משפט אופייני לטקסט מידעי?',o:['הלווייתן הוא היונק הגדול בעולם.','יש לאסור ציד לווייתנים.','לדעתי ציד לווייתנים אכזרי.','חובה להגן על הלווייתנים.'],w:'עובדה בלי עמדה.'}]},
+{n:'כתיבת טיעון',tag:'עקיפה',intro:'עקיפה: בחרו דרך. הקצרה קלה יותר (נקודה לשאלה), הארוכה קשה יותר (2 נקודות לשאלה).',paths:{
+easy:{pts:1,qs:[
+{q:'הטענה: יש להאריך את ההפסקה הגדולה. איזה נימוק משכנע?',o:['תלמידים שנחים מתרכזים טוב יותר בשיעורים','כי אני רוצה','כי זה כיף','כי כולם רוצים'],w:'נימוק טוב מסביר מדוע הטענה נכונה.'},
+{q:'מה תפקיד הדוגמה בטיעון?',o:['להמחיש ולחזק את הנימוק','להחליף את הטענה','לסתור את הנימוק','לשאול שאלה'],w:'הדוגמה מוכיחה ומחזקת.'},
+{q:'איזה משפט הוא טענה (עמדה)?',o:['צריך לקצר את יום הלימודים.','ההפסקה נמשכת 20 דקות.','יש שמונה שיעורים ביום.','הצלצול נשמע ב-10:00.'],w:'טענה היא עמדה שאפשר להתווכח עליה.'},{q:'איזה משפט הוא נימוק ולא טענה?',o:['פעילות גופנית משפרת ריכוז','צריך להוסיף שיעורי ספורט','יש לבטל שיעורי בית','צריך לקצר את יום הלימודים'],w:'נימוק מסביר מדוע הטענה נכונה.'},{q:'איזה משפט יכול לשמש דוגמה?',o:['למשל, אחרי שיעור ספורט רבים מאיתנו מתרכזים יותר','צריך לשפר את ההוראה','כי כך נכון','לכן יש לשנות'],w:'דוגמה מציגה מקרה מוחשי.'},{h:1,q:'מה חסר בטיעון: ״צריך להקטין את הכיתות, כי זה לא טוב״?',o:['נימוק מפורט ומשכנע','טענה','שם הכותב','שאלה'],w:'״כי זה לא טוב״ אינו נימוק.'},{h:1,q:'איזה קשר מתאים להוספת נימוק שני?',o:['בנוסף','לעומת זאת','אילו','אף על פי כן'],w:'״בנוסף״ = הוספה.'},{h:1,q:'איזה משפט פותח בצורה הטובה ביותר פסקת טיעון?',o:['לדעתי יש להאריך את ההפסקה, מכיוון שהיא מאפשרת למידה טובה יותר','ההפסקה היא זמן שבו אוכלים','ההפסקה שלנו קצרה','בואו נדבר על ההפסקה'],w:'פתיחה טובה כוללת טענה ונימוק.'}]},
+hard:{pts:2,qs:[
+{q:'הטענה: יש לאסור טלפונים בשיעורים. מהו הנימוק החזק ביותר?',o:['הם מפריעים לריכוז של התלמיד ושל חבריו','אני לא אוהב טלפונים','זה לא נעים','מורה אחד כעס פעם'],w:'נימוק חזק קשור ישירות לטענה.'},
+{q:'איזה קשר מתאים להוספת נימוק שני?',o:['יתר על כן','לעומת זאת','אילו','אף על פי כן'],w:'״יתר על כן״ = קשר של הוספה.'},
+{q:'מה תפקיד המשפט: ״לכן יש לאסור טלפונים בשיעורים״ בסוף הטיעון?',o:['סיכום החוזר אל הטענה','הצגת דוגמה','ניגוד לנימוק','שאלה לקורא'],w:'הסיום חוזר אל הטענה ומסכם.'},{q:'איזו טענה מנומקת?',o:['יש להגביל מסכים בערב, שכן הם פוגעים בשינה','מסכים נפוצים בבתים','אני אוהב לשחק בערב','כולם משתמשים בטלפון'],w:'טענה מנומקת כוללת עמדה וסיבה.'},{q:'מה החולשה ב״יש לאסור מסכים, כי כולם אומרים כך״?',o:['הנימוק מבוסס על דעת הרבים ולא על סיבה','הטענה לא ברורה','אין דוגמה','הוא ארוך מדי'],w:'״כולם אומרים״ אינו נימוק לגופו של עניין.'},{q:'מה תפקיד המשפט ״לדוגמה, תלמידים שישנו מעט נרדמים בשיעור״?',o:['להמחיש את הנימוק','להציג טענה חדשה','לסכם','לסתור'],w:'הדוגמה מחזקת את הנימוק.'},{q:'איזה סיום מתאים לטיעון?',o:['לכן כדאי להגביל מסכים בערב','אגב, יש גם סרטים','ובכל זאת מי יודע','שאלה פתוחה'],w:'הסיום חוזר אל הטענה.'},{q:'כיצד כדאי להתייחס לטענה נגדית?',o:['להציג אותה ולהסביר מדוע הטענה שלי עדיפה','להתעלם ממנה','להסכים איתה לגמרי','להחליף את הטענה'],w:'טיעון חזק מתמודד עם התנגדות.'}]}}}
+];
+const $=s=>document.querySelector(s),app=$('#app');
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let S=null,tick=null;
+const save=()=>{try{localStorage.setItem('race1',JSON.stringify(S))}catch(e){}};
+const load=()=>{try{return JSON.parse(localStorage.getItem('race1'))}catch(e){return null}};
+const ix=i=>(S.k-1+i)%ST.length;
+const cfg=()=>{const s=ST[ix(S.si)],p=s.paths?s.paths[S.path]:s;return{s,qs:p.qs,pts:p.pts}};
+const hdr=()=>`${TM?'<p class="mute"><b>מצב מורה</b>: דילוג על קוד הקבוצה</p>':''}<div class="top"><div class="dots">${ST.map((_,i)=>`<div class="dot ${i<S.si?'done':i==S.si?'on':''}">${i+1}</div>`).join('')}</div><div class="pill">${S.sc.reduce((a,b)=>a+b,0)} נק׳</div></div>`;
+function home(){const old=load();
+app.innerHTML=`<h1>המירוץ למבחן</h1><p class="mute">שש תחנות, חמש דקות לכל תחנה. כל תשובה נכונה מקדמת אתכם לתחנה הבאה.</p><div class="card"><label for="tm">שם הקבוצה</label><input id="tm" maxlength="24" autocomplete="off"><label for="kn">מספר הקבוצה (המורה קבע)</label><select id="kn">${[1,2,3,4,5,6].map(n=>`<option>${n}</option>`).join('')}</select><label for="mn">מספר החבר בקבוצה</label><select id="mn">${[1,2,3,4,5,6].map(n=>`<option>${n}</option>`).join('')}</select><label for="sz">כמה חברים בקבוצה?</label><select id="sz">${[2,3,4,5,6].map(n=>`<option ${n==4?'selected':''}>${n}</option>`).join('')}</select><button class="btn" id="go">יוצאים לדרך</button>${old&&old.team?'<button class="btn alt" id="re"></button>':''}</div>`;
+$('#go').onclick=()=>{const v=$('#tm').value.trim();if(!v){$('#tm').focus();return}if(+$('#mn').value>+$('#sz').value){$('#mn').focus();return}S={team:v,k:+$('#kn').value,m:+$('#mn').value,n:+$('#sz').value,si:0,qi:0,sc:[],mx:[],path:'easy',t0:Date.now()};save();intro()};
+if(old&&old.team){$('#re').textContent='להמשיך: '+old.team;$('#re').onclick=()=>{S=old;S.k=S.k||1;S.m=S.m||1;S.n=S.n||1;S.fin&&S.si<ST.length?finish():S.end&&S.si<ST.length?quiz():intro()}}}
+function intro(){if(S.si>=ST.length)return S.done?end():gate();const{s}=cfg();S.qi=0;S.end=0;
+app.innerHTML=`${hdr()}<div class="card"><h2>תחנה ${ix(S.si)+1}: ${s.n}${s.tag?`<span class="tag">${s.tag}</span>`:''}</h2><p>${s.intro}</p><p class="mute">8 שאלות · שאלות האתגר שוות כפול · 5 דקות. רק תשובה נכונה בניסיון הראשון מזכה בנקודות, ועד שהשאלה לא נפתרה אי אפשר להמשיך. איחור גורר עונש: דקת המתנה בתחנה לפני שמגלים את הרמז הבא.</p>${S.si>0?`<p class="mute">${esc(clue(ix(S.si)))}</p><label for="cd">הקוד שקיבלתם במקום</label><input id="cd" autocomplete="off">`:''}${s.paths?'<button class="btn" data-p="easy">דרך קצרה</button><button class="btn alt" data-p="hard">דרך ארוכה</button>':'<button class="btn" id="st">מתחילים</button>'}</div>`;
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{S.path=b.dataset.p;start()});
+const b=$('#st');if(b)b.onclick=start}
+function start(){const c=$('#cd');if(c&&c.value.trim()!==CODES[ix(S.si)]){c.style.borderColor='var(--no)';c.focus();return}S.end=Date.now()+T*1000;S.cur=0;save();quiz()}
+function quiz(){clearInterval(tick);const{s,qs,pts}=cfg();if(S.qi>=qs.length)return finish(false);
+const q=qs[S.qi],opts=shuf(q.o.map((t,i)=>({t,c:i==0})));
+app.innerHTML=`${hdr()}<div class="card"><div class="top"><span class="mute">תחנה ${ix(S.si)+1}: ${s.n} · שאלה ${S.qi+1} מתוך ${qs.length}</span><span class="timer" id="tm"></span></div>${(q.t||s.text)?`<div class="text">${esc(q.t||s.text)}</div>`:''}<p class="q">${q.h?'<span class="tag">אתגר ×2</span>':''}${esc(q.q)}</p><div id="os"></div><div id="wy"></div></div>`;
+opts.forEach(o=>{const b=document.createElement('button');b.className='opt';b.textContent=o.t;b.onclick=()=>pick(b,o,q,pts,opts);$('#os').appendChild(b)});
+const f=x=>Math.floor(x/60)+':'+String(x%60).padStart(2,'0');const t=()=>{const l=Math.round((S.end-Date.now())/1000);const e=$('#tm');if(!e)return;e.textContent=l>=0?f(l):'איחור +'+f(-l)+' · עונש: דקת המתנה';e.className='timer'+(l<30?' low':'')};t();tick=setInterval(t,500)}
+function pick(b,o,q,pts,opts){if(!o.c){b.disabled=true;b.classList.add('no');S.tr=(S.tr||0)+1;$('#wy').innerHTML='<p class="why"><b>לא נכון.</b> נסו שוב.</p>';return}document.querySelectorAll('.opt').forEach((x,i)=>{x.disabled=true;if(opts[i].c)x.classList.add('ok')});
+S.sc[S.si]=(S.sc[S.si]||0)+(S.tr?0:pts*(q.h?2:1));S.qi++;S.tr=0;save();
+$('#wy').innerHTML=`<p class="why"><b>נכון!</b> ${esc(q.w)}</p><button class="btn" id="nx">המשך</button>`;$('#nx').onclick=quiz;$('#nx').focus()}
+function finish(){clearInterval(tick);const{qs,pts}=cfg();if(!S.fin){const o=S.end?Math.max(0,Math.round((Date.now()-S.end)/1000)):0;S.mx[S.si]=qs.reduce((a,q)=>a+pts*(q.h?2:1),0);S.sc[S.si]=S.sc[S.si]||0;S.end=0;S.fin=1;S.wu=o>0?Date.now()+60000:0;save()}const ov=S.wu;
+app.innerHTML=`${hdr()}<div class="card" style="text-align:center"><div class="stamp">תחנה ${ix(S.si)+1}<br>נחתמה</div>${ov>0?'<p>איחרתם בתחנה, ולכן יש עונש.</p>':''}<p class="big">${S.sc[S.si]}/${S.mx[S.si]}</p><div id="cb"></div></div>`;
+const dg=m=>((ix(S.si)*7+m*3+S.k*5)%9)+1;const rv=()=>{if(TM){rv2();return}$('#cb').innerHTML=`<div class="clue"><b>הספרה האישית שלכם: ${dg(S.m)}</b><br>אספו מכל חברי הקבוצה את הספרות לפי סדר מספרי החברים (1 עד ${S.n}), והקלידו את הקוד המשותף.</div><input id="tc" inputmode="numeric" autocomplete="off"><button class="btn" id="tb">בדיקה</button>`;$('#tb').onclick=()=>{let e='';for(let i=1;i<=S.n;i++)e+=dg(i);const c=$('#tc');if(c.value.trim()!==e){c.style.borderColor='var(--no)';c.focus();return}rv2()}};const rv2=()=>{$('#cb').innerHTML=`<div class="clue"><b>${S.si<ST.length-1?'לאן רצים עכשיו?':'לאן רצים לקוד האחרון?'}</b><br>${esc(S.si<ST.length-1?clue(ix(S.si+1)):FCLUE)}</div><button class="btn" id="nx">הגעתם? להזנת הקוד</button>`;$('#nx').onclick=()=>{S.si++;S.fin=0;save();intro()}};
+let w=Math.ceil((S.wu-Date.now())/1000);if(ov>0&&w>0){const c=$('#cb');const u=()=>{c.innerHTML='<div class="clue"><b>עונש: ממתינים בתחנה</b><br>הרמז למקום הבא ייחשף בעוד <b>'+w+'</b> שניות.</div>';if(!w--){clearInterval(wt);rv()}};const wt=setInterval(u,1000);u()}else rv()}
+function gate(){app.innerHTML=`${hdr()}<div class="card"><h2>הקוד האחרון</h2><p>${esc(FCLUE)}</p><label for="fc">הקוד האחרון</label><input id="fc" autocomplete="off"><button class="btn" id="fg">לסיום המירוץ</button></div>`;$('#fg').onclick=()=>{const c=$('#fc');if(c.value.trim()!==FCODE){c.style.borderColor='var(--no)';c.focus();return}S.done=1;S.tf=Date.now();save();end()}}
+function end(){const tot=S.sc.reduce((a,b)=>a+b,0),mx=S.mx.reduce((a,b)=>a+b,0),m=Math.round(((S.tf||Date.now())-S.t0)/60000);
+const weak=ST.map((_,i)=>({n:ST[ix(i)].n,r:S.sc[i]/S.mx[i]})).filter(x=>x.r<.75).sort((a,b)=>a.r-b.r).slice(0,2);
+app.innerHTML=`<h1>סיימתם את המירוץ!</h1><div class="card"><p class="big">${tot}/${mx}</p><div class="code"><b></b><br><span class="mute">${m} דקות · סיום בשעה ${new Date(S.tf||Date.now()).toLocaleTimeString('he-IL')} · רצו אל המורה והראו את המסך!</span></div></div><div class="card">${ST.map((_,i)=>`<div class="row"><span>${ST[ix(i)].n}</span><b>${S.sc[i]}/${S.mx[i]}</b></div>`).join('')}<p>${weak.length?'כדאי לחזור על: '+weak.map(x=>esc(x.n)).join(' ו'):'כל הכבוד, אין נושא חלש!'}</p></div><button class="btn alt" id="rs">להתחיל מחדש</button>`;
+document.querySelector('.code b').textContent=S.team+' · חבר/ה '+S.m;
+$('#rs').onclick=()=>{try{localStorage.removeItem('race1')}catch(e){}home()}}
+home();
+</script>
+</body>
+</html>
